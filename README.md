@@ -5,8 +5,7 @@
 
 I like CarrierWave. That being said, I don't like tying up app instances waiting for images to process.
 
-This gem addresses that by offloading processing or storage/processing to a background task.
-We currently support Delayed Job, Resque, Sidekiq, SuckerPunch, Girl Friday, Qu, and Queue Classic.
+This gem addresses that by offloading processing or storage/processing to a background task. All backends supported by activejob are compatible.
 
 ## Background options
 
@@ -23,7 +22,7 @@ Backgrounder::ORM::Base::process_in_background
 ```ruby
 # This does nothing to the file after it is cached which makes it super fast.
 # It requires a column in the database which stores the cache location set by carrierwave so the background job can access it.
-# The drawback to using this method is the need for a central location to store the cached files.
+# The drawback to using this method is the need for a central location to store the cached files. Recent CarrierWave make this possible by allowing to set a cache_storage.
 # Heroku may deploy workers on separate servers from where your dyno cached the files.
 #
 # IMPORTANT: Only use this method if you have full control over your tmp storage directory.
@@ -41,29 +40,6 @@ In Rails, add the following your Gemfile:
 gem 'carrierwave_backgrounder'
 ```
 
-Run the generator which will create an initializer in config/initializers.
-```bash
-  rails g carrierwave_backgrounder:install
-```
-
-You can pass additional configuration options to Girl Friday and Sidekiq:
-
-```ruby
-CarrierWave::Backgrounder.configure do |c|
-  c.backend :girl_friday, queue: :awesome_queue, size: 3, store: GirlFriday::Store::Redis
-end
-```
-
-In your CarrierWave uploader file:
-
-```ruby
-class AvatarUploader < CarrierWave::Uploader::Base
-  include ::CarrierWave::Backgrounder::Delay
-
-  #etc...
-end
-```
-
 ### To use process_in_background
 
 In your model:
@@ -78,6 +54,16 @@ the background processing is started and to `false` when the background processi
 
 ```ruby
 add_column :users, :avatar_processing, :boolean, null: false, default: false
+```
+
+In your CarrierWave uploader file:
+
+```ruby
+class AvatarUploader < CarrierWave::Uploader::Base
+  include ::CarrierWave::Backgrounder::Delay
+
+  #etc...
+end
 ```
 
 ### To use store_in_background
@@ -113,18 +99,18 @@ This must be set before you assign an upload:
 @user.attributes = params[:user]
 ```
 
-### Override worker
-To override the worker in cases where additional methods need to be called or you have app specific requirements, pass the worker class as the
+### Override job
+To override the job in cases where additional methods need to be called or you have app specific requirements, pass the job class as the
 second argument:
 
 ```ruby
-process_in_background :avatar, MyParanoidWorker
+process_in_background :avatar, MyParanoidJob
 ```
 
-Then create a worker that subclasses carrierwave_backgrounder's worker:
+Then create a job that subclasses carrierwave_backgrounder's job:
 
 ```ruby
-class MyParanoidWorker < ::CarrierWave::Workers::ProcessAsset
+class MyParanoidWorker < ::CarrierWave::Workers::ProcessAssetJob
   # ...or subclass CarrierWave::Workers::StoreAsset if you're using store_in_background
 
   def error(job, exception)
@@ -132,32 +118,6 @@ class MyParanoidWorker < ::CarrierWave::Workers::ProcessAsset
   end
 
   # other hooks you might care about
-end
-```
-
-### ActiveJob
-Use overriden worker that inherits from ActiveJob::Base and includes relevant worker mixin:
-```ruby
-class MyActiveJobWorker < ActiveJob::Base
-  include ::CarrierWave::Workers::ProcessAssetMixin
-  # ... or include ::CarrierWave::Workers::StoreAssetMixin
-
-  after_perform do
-    # your code here
-  end
-
-  # Sometimes job gets performed before the file is uploaded and ready.
-  # You can define how to handle that case by overriding `when_not_ready` method
-  # (by default it does nothing)
-  def when_not_ready
-    retry_job
-  end
-end
-```
-Don't forget to set `active_job` as a backend in the config:
-```ruby
-CarrierWave::Backgrounder.configure do |c|
-  c.backend :active_job, queue: :carrierwave
 end
 ```
 

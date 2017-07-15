@@ -1,13 +1,8 @@
 # encoding: utf-8
 module CarrierWave
-  module Workers
-
-    module ProcessAssetMixin
-      include CarrierWave::Workers::Base
-
-      def self.included(base)
-        base.extend CarrierWave::Workers::ClassMethods
-      end
+  module Jobs
+    class ProcessAssetMixin < ActiveJob::Base
+      include CarrierWave::Jobs::Base
 
       def perform(*args)
         record = super(*args)
@@ -21,8 +16,6 @@ module CarrierWave
           when_not_ready
         end
       end
-
-    end # ProcessAssetMixin
-
-  end # Workers
-end # Backgrounder
+    end
+  end
+end

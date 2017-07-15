@@ -1,6 +1,6 @@
 # encoding: utf-8
 module CarrierWave
-  module Workers
+  module Jobs
 
     module Base
       attr_accessor :klass, :id, :column, :record

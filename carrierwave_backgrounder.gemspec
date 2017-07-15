@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["larry@lucidbleu.com"]
   s.homepage    = "https://github.com/lardawge/carrierwave_backgrounder"
   s.licenses    = ["MIT"]
-  s.summary     = %q{Offload CarrierWave's image processing and storage to a background process using Delayed Job, Resque, Sidekiq, Qu, Queue Classic or Girl Friday}
+  s.summary     = %q{Offload CarrierWave's image processing and storage to a background process using ActiveJob}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "carrierwave", [">= 0.5", "< 2.0"]
-  s.add_dependency "mime-types", ["~> 2.99"]
+  s.add_dependency "mime-types"
 
   s.add_development_dependency "rspec", ["~> 3.5.0"]
   s.add_development_dependency "rake"
