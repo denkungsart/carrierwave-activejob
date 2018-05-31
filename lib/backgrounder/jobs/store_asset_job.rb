@@ -12,7 +12,9 @@ module CarrierWave
           record.send :"#{column}_cache=", record.send(:"#{column}_tmp")
           record.send :"#{column}_tmp=", nil
           record.send :"#{column}_processing=", false if record.respond_to?(:"#{column}_processing")
-          record.save!
+          record.send :"write_#{column}_identifier"
+          record.send :"store_#{column}!"
+          record.save(validate: false)
         else
           when_not_ready
         end
