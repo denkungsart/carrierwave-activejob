@@ -1,5 +1,5 @@
 ## 0.5.0
-  * Fix compatability with CarrierWave >= 1.0
+  * Fix compatability with CarrierWave 1.0 & 2.0
   * Drop individual worker implementations in favor of activejob.
   * Remove generator for now, because there's nothing to configure.
 
