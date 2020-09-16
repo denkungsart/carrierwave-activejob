@@ -3,12 +3,12 @@ $:.push File.expand_path("../lib", __FILE__)
 require "backgrounder/version"
 
 Gem::Specification.new do |s|
-  s.name        = "carrierwave_backgrounder"
+  s.name        = "carrierwave-activejob"
   s.version     = CarrierWave::Backgrounder::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Larry Sprock"]
-  s.email       = ["larry@lucidbleu.com"]
-  s.homepage    = "https://github.com/lardawge/carrierwave_backgrounder"
+  s.authors     = ["Fabian Schwahn"]
+  s.email       = ["fabian.schwahn@gmail.com"]
+  s.homepage    = ""
   s.licenses    = ["MIT"]
   s.summary     = %q{Offload CarrierWave's image processing and storage to a background process using ActiveJob}
 
