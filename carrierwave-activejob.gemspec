@@ -3,14 +3,23 @@ $:.push File.expand_path("../lib", __FILE__)
 require "backgrounder/version"
 
 Gem::Specification.new do |s|
-  s.name        = "carrierwave_backgrounder"
+  s.name        = "carrierwave-activejob"
   s.version     = CarrierWave::Backgrounder::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Larry Sprock"]
-  s.email       = ["larry@lucidbleu.com"]
-  s.homepage    = "https://github.com/lardawge/carrierwave_backgrounder"
+  s.authors     = ["Fabian Schwahn"]
+  s.email       = ["fabian.schwahn@gmail.com"]
+  s.homepage    = ""
   s.licenses    = ["MIT"]
   s.summary     = %q{Offload CarrierWave's image processing and storage to a background process using ActiveJob}
+
+  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
+  # to allow pushing to a single host or delete this section to allow pushing to any host.
+  if s.respond_to?(:metadata)
+    s.metadata["allowed_push_host"] = "https://rubygems.pkg.github.com/denkungsart"
+  else
+    raise "RubyGems 2.0 or newer is required to protect against " \
+      "public gem pushes."
+  end
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
