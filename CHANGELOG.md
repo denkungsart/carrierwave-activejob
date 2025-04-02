@@ -1,3 +1,6 @@
+## 0.5.1 (2025-04-02)
+  * Relax CarrierWave dependency to allow 3.x
+
 ## 0.5.0
   * Rename gem to carrierwave-activejob and prepare for release
   * Fix compatability with CarrierWave 1.0 & 2.0
